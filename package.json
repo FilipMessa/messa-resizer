@@ -1,0 +1,13 @@
+{
+  "name": "@messa/resizer",
+  "version": "0.0.1",
+  "description": "React resizer component.",
+  "main": "src/index.js",
+  "author": "filip.messa@gmail.com",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  }
+}
