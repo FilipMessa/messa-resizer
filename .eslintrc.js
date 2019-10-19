@@ -16,7 +16,7 @@ module.exports = {
     "import/no-extraneous-dependencies": [
       ERROR,
       {
-        devDependencies: ["src/*.stories.js", "webpack.config.js"],
+        devDependencies: ["src/*.stories.js", "webpack.config.js", "**/*.test.js"],
       },
     ],
      // flowtype (https://github.com/gajus/eslint-plugin-flowtype)
@@ -39,7 +39,7 @@ module.exports = {
     "flowtype/require-indexer-name": OFF,
     "flowtype/require-inexact-type": ERROR,
     "flowtype/require-parameter-type": OFF,
-    "flowtype/require-readonly-react-props": OFF, // TODO: https://github.com/gajus/eslint-plugin-flowtype/pull/400#issuecomment-492828739
+    "flowtype/require-readonly-react-props": OFF,
     "flowtype/require-return-type": OFF,
     "flowtype/require-types-at-top": OFF,
     "flowtype/require-valid-file-annotation": [ERROR, "always"],

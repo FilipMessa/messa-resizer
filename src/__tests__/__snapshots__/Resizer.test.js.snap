@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Link changes the class when hovered 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "pink",
+      "height": "100px",
+      "width": "100px",
+    }
+  }
+>
+  <div>
+    Handlebar
+  </div>
+  <button
+    onClick={[Function]}
+    type="button"
+  >
+    Click :
+    0
+  </button>
+  [WIP] Resizer
+</div>
+`;
