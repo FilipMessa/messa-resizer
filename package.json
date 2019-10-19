@@ -1,11 +1,10 @@
 {
-  "name": "@messa/resizer",
-  "version": "0.0.1",
+  "name": "messa-resizer",
+  "version": "0.0.3",
   "description": "React resizer component.",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "author": "filip.messa@gmail.com",
   "license": "MIT",
-  "private": false,
   "peerDependencies": {
     "react": "^16.10.2",
     "react-dom": "^16.10.2"
@@ -13,6 +12,8 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
     "@storybook/addon-actions": "^5.2.4",
     "@storybook/addon-links": "^5.2.4",
     "@storybook/addons": "^5.2.4",
@@ -29,11 +30,15 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.3.0",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build:storybook": "build-storybook",
+    "build": "webpack --mode production",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   }

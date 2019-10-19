@@ -9,7 +9,7 @@ module.exports = {
     'import/no-extraneous-dependencies': [
       ERROR,
       {
-        devDependencies: ['src/*.stories.js', 'stories/**'],
+        devDependencies: ['src/*.stories.js', 'webpack.config.js'],
       },
     ],
   },
