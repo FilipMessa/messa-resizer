@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { Handlebar } from './Handlebar';
 
@@ -6,7 +8,11 @@ const DEFAULT_SIZE = {
   HEIGHT: '100px',
 };
 
-export function Resizer() {
+type Props = {|
+  +className?: string,
+|};
+
+export function Resizer({ className }: Props) {
   const [count, setCount] = React.useState(0);
   const handleClick = () => {
     setCount(count + 1);
@@ -21,7 +27,7 @@ export function Resizer() {
   };
 
   return (
-    <div style={styles.root}>
+    <div style={styles.root} className={className}>
       <Handlebar />
       <button type="button" onClick={handleClick}>
         Click :{count}
