@@ -1,4 +1,10 @@
 import React from 'react';
+import { Handlebar } from './Handlebar';
+
+const DEFAULT_SIZE = {
+  WIDTH: '100px',
+  HEIGHT: '100px',
+};
 
 export function Resizer() {
   const [count, setCount] = React.useState(0);
@@ -6,8 +12,17 @@ export function Resizer() {
     setCount(count + 1);
   };
 
+  const styles = {
+    root: {
+      backgroundColor: 'pink',
+      width: DEFAULT_SIZE.WIDTH,
+      height: DEFAULT_SIZE.HEIGHT,
+    },
+  };
+
   return (
-    <div>
+    <div style={styles.root}>
+      <Handlebar />
       <button type="button" onClick={handleClick}>
         Click :{count}
       </button>
