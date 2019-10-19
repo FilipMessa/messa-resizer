@@ -1,5 +1,8 @@
 .vscode/
 
 node_modules/
+.cache/
 storybook-static/
+lib/
+
 yarn-error.log
