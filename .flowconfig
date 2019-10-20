@@ -3,9 +3,14 @@
 [include]
 
 [libs]
+flow-typed
 
 [lints]
 
 [options]
+esproposal.optional_chaining=enable
 
 [strict]
+
+[version]
+0.109.0

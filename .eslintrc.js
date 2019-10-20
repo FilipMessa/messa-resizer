@@ -5,6 +5,9 @@ const ERROR = 2;
 
 module.exports = {
   parser: "babel-eslint",
+  env: {
+    "jest": true
+  },
   extends: ["wesbos"],
   plugins: [
     "flowtype",
