@@ -1,6 +1,8 @@
-# Resizer Component
+# Resizer Component (Experimental)
 
 storybook: https://resizer.messafilip.now.sh
+
+![storybook gif](./example.gif)
 
 ## Requirments
 
