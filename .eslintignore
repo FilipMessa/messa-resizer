@@ -1,3 +1,4 @@
 storybook-static/*
 lib/*
 .cache/*
+flow-typed/

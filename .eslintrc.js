@@ -14,6 +14,8 @@ module.exports = {
     "eslint-plugin-flowtype"
   ],
   rules: {
+    // custom
+    'no-unused-expressions': OFF,
     // extra prettier rules
     ...require('eslint-config-prettier/flowtype').rules,
     "import/no-extraneous-dependencies": [
@@ -35,7 +37,6 @@ module.exports = {
     "flowtype/no-mutable-array": OFF,
     "flowtype/no-primitive-constructor-types": WARN,
     "flowtype/no-types-missing-file-annotation": ERROR,
-    "flowtype/no-unused-expressions": [ERROR, { allowTaggedTemplates: true }],
     "flowtype/no-weak-types": OFF,
     "flowtype/require-compound-type-alias": OFF,
     "flowtype/require-exact-type": OFF,

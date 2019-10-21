@@ -1,120 +1,151 @@
 // @flow
 
-/*
- * @TODOs
- *
- * - the defaultHeight and defaultWidth should handle string ('auto', '12px', '100%', etc...)
- * - minWidth and maxWidth
- * - handle height change
- * - handle bottom-left
- * - styles
- *
- *  @IDEAs
- *
- * - maxHeight and maxWidth from props (option)
- * - re-write it into hook insted of component
- */
+import * as React from 'react';
+import {
+  Handlebar,
+  type HandlebarEvent,
+  type HandlebarType,
+} from './Handlebar';
 
-import React from 'react';
-import { Handlebar, type HandlebarEvent } from './Handlebar';
+import { EVENTS, UNIT, TYPES, HANDLEBAR_WIDTH } from './consts';
 
-const DEFAULT_PROPS = {
-  WIDTH: 'auto',
-  HEIGHT: 100,
-  MIN_WIDTH: 20, // @TODO - should be same const like in the Handlebar width
-  MAX_WIDTH: window.innerWidth, // @TODO??
+export type Style = {
+  +[key: string]: string | number,
+  ...,
 };
-
-const EVENTS = {
-  TOUCH_MOVE: 'touchmove',
-  TOUCH_END: 'touchend',
-  MOUSE_MOVE: 'mousemove',
-  MOUSE_UP: 'mouseup',
-};
-
-const UNIT = 'px';
 
 type Props = {|
   +className?: string,
-  +defaultWidth?: number | 'auto',
-  +defaultHeight?: string,
+  +defaultWidth?: number,
+  +defaultHeight?: number,
+  +children: React.Node,
+  +maxHeight?: number,
+  +minHeight?: number,
+  +minWidth?: number,
+  +maxWidth?: number,
+  +style?: Style,
 |};
 
-type CursorEvent = any; // @TODO //MouseEvent | TouchEvent; or SyntheticMouseEvent<> | SyntheticTouchEvent<>;
+const DEFAULT_POSITION = { x: 0, y: 0 };
 
-function getCursorPosition(axis: 'x' | 'y', event: CursorEvent): ?number {
-  switch (event.type) {
-    case EVENTS.TOUCH_MOVE:
-      return event.changedTouches[0][`page${axis.toUpperCase()}`];
-    case EVENTS.MOUSE_MOVE:
-      return event[`page${axis.toUpperCase()}`];
-    default:
-      return undefined;
+function validateConstraints(n, min, max) {
+  return Math.max(Math.min(n, max), min);
+}
+
+function getCurrentCursorPosition(axis, event) {
+  if (event.type === EVENTS.TOUCH_MOVE) {
+    return event.changedTouches[0][`page${axis.toUpperCase()}`];
   }
+
+  return event[`page${axis.toUpperCase()}`];
 }
 
 export function Resizer({
   className,
-  defaultWidth = DEFAULT_PROPS.WIDTH,
-  defaultHeight = DEFAULT_PROPS.HEIGHT,
-  minWidth = DEFAULT_PROPS.MIN_WIDTH,
-  maxWidth = DEFAULT_PROPS.MAX_WIDTH,
+  children,
+  defaultWidth,
+  defaultHeight,
+  minWidth = HANDLEBAR_WIDTH,
+  maxWidth = Infinity,
+  minHeight = HANDLEBAR_WIDTH,
+  maxHeight = Infinity,
+  style,
 }: Props) {
-  const [containerWidth, setContainerWidth] = React.useState(defaultWidth);
-  const [containerHeight, setContainerHeight] = React.useState(defaultHeight);
-  const [isCursorDown, setCursorDown] = React.useState(false);
+  const [containerWidth, setContainerWidth] = React.useState<?number>(
+    defaultWidth
+  );
+  const [containerHeight, setContainerHeight] = React.useState<?number>(
+    defaultHeight
+  );
 
-  const [initialCursorPosition, setInitialCursorPosition] = React.useState<?{|
+  const [handlebar, setHandlebar] = React.useState<HandlebarType | null>(null);
+  const [isCursorDown, setCursorDown] = React.useState<boolean>(false);
+
+  const [initialCursorPosition, setInitialCursorPosition] = React.useState<{|
     +x: number,
     +y: number,
-  |}>(null);
+  |}>(DEFAULT_POSITION);
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
-    // aka componentDidMount: if the defaultWidth is set to 'auto', measure real width
-    if (containerRef && containerWidth === 'auto') {
-      /*
-       * FLow does not yet support method or property calls in optional chains.
-       * $FlowIssue: https://github.com/facebook/flow/issues/4303
-       */
-      const { width, height } = containerRef.current?.getBoundingClientRect();
-      setContainerWidth(width);
-      setContainerHeight(height);
-    }
+    /*
+     * FLow does not yet support method or property calls in optional chains.
+     * $FlowIssue: https://github.com/facebook/flow/issues/4303
+     */
+    const { width, height } = containerRef.current?.getBoundingClientRect();
+
+    setContainerWidth(width);
+    setContainerHeight(height);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [containerRef]);
 
   const handleCursorMove = e => {
-    const initalX = initialCursorPosition?.x;
-    const xPosition = getCursorPosition('x', e);
-    // @TODO refactor - find a cleaner way
-    if (initalX && xPosition && typeof containerWidth === 'number') {
-      let newWidth = containerWidth + xPosition - initalX;
+    const getCursorCoordinates = axis => ({
+      [axis]: {
+        initial: initialCursorPosition && initialCursorPosition[axis],
+        current: getCurrentCursorPosition(axis, e),
+      },
+    });
 
-      if (newWidth < minWidth) {
-        newWidth = minWidth;
-      }
-      if (newWidth > maxWidth) {
-        newWidth = maxWidth;
-      }
+    switch (handlebar) {
+      case TYPES.RIGHT: {
+        const { x } = getCursorCoordinates('x');
 
-      setContainerWidth(newWidth);
+        // @TODO DRY
+        const width = containerWidth + x.current - x.initial;
+
+        setContainerWidth(validateConstraints(width, minWidth, maxWidth));
+        break;
+      }
+      case TYPES.BOTTOM: {
+        const { y } = getCursorCoordinates('y');
+
+        // @TODO DRY
+        const height = containerHeight + y.current - y.initial;
+        setContainerHeight(validateConstraints(height, minHeight, maxHeight));
+        break;
+      }
+      case TYPES.BOTTOM_RIGHT: {
+        const { x } = getCursorCoordinates('x');
+        const { y } = getCursorCoordinates('y');
+
+        // @TODO DRY
+        const width = containerWidth + x.current - x.initial;
+        const height = containerHeight + y.current - y.initial;
+
+        setContainerWidth(validateConstraints(width, minWidth, maxWidth));
+        setContainerHeight(validateConstraints(height, minHeight, maxHeight));
+        break;
+      }
+      default:
+        return undefined;
     }
   };
 
   const handleCursorUp = React.useCallback(() => {
     setCursorDown(false);
-    setInitialCursorPosition(null);
+    setInitialCursorPosition(DEFAULT_POSITION);
+    setHandlebar(null);
   }, []);
+
+  const handleCursorDown = (
+    { clientX, clientY }: HandlebarEvent,
+    type: HandlebarType
+  ) => {
+    setCursorDown(true);
+    setInitialCursorPosition({ x: clientX, y: clientY });
+    setHandlebar(type);
+  };
 
   React.useEffect(() => {
     if (isCursorDown) {
-      // move
+      // listen for move
       window.addEventListener(EVENTS.MOUSE_MOVE, handleCursorMove);
       window.addEventListener(EVENTS.TOUCH_MOVE, handleCursorMove);
 
-      // up
+      // listen for cursor up
       window.addEventListener(EVENTS.MOUSE_UP, handleCursorUp);
       window.addEventListener(EVENTS.TOUCH_END, handleCursorUp);
     }
@@ -129,11 +160,6 @@ export function Resizer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCursorDown]);
 
-  const handleOnHandlebarClick = ({ clientX, clientY }: HandlebarEvent) => {
-    setCursorDown(true);
-    setInitialCursorPosition({ x: clientX, y: clientY });
-  };
-
   const styles = {
     container: {
       margin: '2em',
@@ -144,16 +170,21 @@ export function Resizer({
       touchAction: 'none',
       userSelect: isCursorDown ? 'none' : 'auto',
 
-      width: `${containerWidth}${UNIT}`,
-      height: `${containerHeight}${UNIT}`,
+      width: containerWidth ? `${containerWidth}${UNIT}` : 'auto',
+      height: containerHeight ? `${containerHeight}${UNIT}` : 'auto',
     },
   };
 
   return (
-    <div ref={containerRef} style={styles.container} className={className}>
-      <Handlebar type="left" onMove={handleOnHandlebarClick} />
-      <Handlebar type="bottom" onMove={handleOnHandlebarClick} />
-      [WIP] Resizer
+    <div
+      ref={containerRef}
+      style={{ ...style, ...styles.container }}
+      className={className}
+    >
+      <Handlebar type="right" onMove={handleCursorDown} />
+      <Handlebar type="bottom" onMove={handleCursorDown} />
+      <Handlebar type="bottom-right" onMove={handleCursorDown} />
+      {children}
     </div>
   );
 }
