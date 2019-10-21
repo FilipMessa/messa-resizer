@@ -18,10 +18,8 @@ exports[`render properly 1`] = `
     onTouchStart={[Function]}
     style={
       Object {
-        "backgroundColor": "blue",
         "cursor": "col-resize",
         "height": "100%",
-        "opacity": 0.4,
         "position": "absolute",
         "right": -5,
         "top": 0,
@@ -34,12 +32,10 @@ exports[`render properly 1`] = `
     onTouchStart={[Function]}
     style={
       Object {
-        "backgroundColor": "red",
         "bottom": -5,
         "cursor": "row-resize",
         "height": 20,
         "left": 0,
-        "opacity": 0.4,
         "position": "absolute",
         "width": "100%",
       }
@@ -50,7 +46,6 @@ exports[`render properly 1`] = `
     onTouchStart={[Function]}
     style={
       Object {
-        "backgroundColor": "green",
         "bottom": -5,
         "cursor": "nwse-resize",
         "height": 20,

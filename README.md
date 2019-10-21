@@ -1,9 +1,11 @@
 # Resizer Component
 
+storybook: https://resizer.messafilip.now.sh
+
 ## Requirments
 
 - [x] Use ES6 (with Flow) or TypeScript
-- [ ]Third-party apps should be able to modify styles
+- [x]Third-party apps should be able to modify styles
 - [x] The example should work in Chrome, Firefox and Safari
 - [x] Use React
 - [ ] Add unit tests (each component should be covered)

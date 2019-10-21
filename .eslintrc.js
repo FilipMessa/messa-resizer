@@ -19,7 +19,7 @@ module.exports = {
     "jsx-a11y/interactive-supports-focus": OFF,
     "jsx-a11y/no-static-element-interactions": OFF,
     // extra prettier rules
-    ...require('eslint-config-prettier/flowtype').rules,
+    ...require("eslint-config-prettier/flowtype").rules,
     "import/no-extraneous-dependencies": [
       ERROR,
       {

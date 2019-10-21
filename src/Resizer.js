@@ -19,7 +19,7 @@ type Props = {|
   +className?: string,
   +defaultWidth?: number,
   +defaultHeight?: number,
-  +children: React.Node,
+  +children?: React.Node,
   +maxHeight?: number,
   +minHeight?: number,
   +minWidth?: number,
@@ -39,7 +39,22 @@ type Props = {|
 
 const DEFAULT_POSITION = { x: 0, y: 0 };
 
-function validateConstraints(n, min, max) {
+function createDefaultStateValidation(state) {
+  return function validateState(defaultValue, maxValue) {
+    if (defaultValue && defaultValue > maxValue) {
+      console.warn(
+        `The prop ${state} deafult value is greater than maximum value!`
+      );
+      return maxValue;
+    }
+    return defaultValue;
+  };
+}
+
+const validateWidth = createDefaultStateValidation('width');
+const validateHeight = createDefaultStateValidation('height');
+
+function getConstraints(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
@@ -65,10 +80,10 @@ export function Resizer({
   maxHeight = Infinity,
 }: Props) {
   const [containerWidth, setContainerWidth] = React.useState<?number>(
-    defaultWidth
+    validateWidth(defaultWidth, maxWidth)
   );
   const [containerHeight, setContainerHeight] = React.useState<?number>(
-    defaultHeight
+    validateHeight(defaultHeight, maxHeight)
   );
 
   const [handlebar, setHandlebar] = React.useState<HandlebarType | null>(null);
@@ -108,8 +123,7 @@ export function Resizer({
 
         // @TODO DRY
         const width = containerWidth + x.current - x.initial;
-
-        setContainerWidth(validateConstraints(width, minWidth, maxWidth));
+        setContainerWidth(getConstraints(width, minWidth, maxWidth));
         break;
       }
       case HADLEBARS_TYPES.BOTTOM: {
@@ -117,7 +131,7 @@ export function Resizer({
 
         // @TODO DRY
         const height = containerHeight + y.current - y.initial;
-        setContainerHeight(validateConstraints(height, minHeight, maxHeight));
+        setContainerHeight(getConstraints(height, minHeight, maxHeight));
         break;
       }
       case HADLEBARS_TYPES.BOTTOM_RIGHT: {
@@ -128,8 +142,8 @@ export function Resizer({
         const width = containerWidth + x.current - x.initial;
         const height = containerHeight + y.current - y.initial;
 
-        setContainerWidth(validateConstraints(width, minWidth, maxWidth));
-        setContainerHeight(validateConstraints(height, minHeight, maxHeight));
+        setContainerWidth(getConstraints(width, minWidth, maxWidth));
+        setContainerHeight(getConstraints(height, minHeight, maxHeight));
         break;
       }
       default:

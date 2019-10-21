@@ -24,9 +24,6 @@ const styles = {
     position: 'absolute',
   },
   [TYPES.RIGHT]: {
-    backgroundColor: 'blue',
-    opacity: 0.4,
-    // @TODO remove dev styless above
     width: HANDLEBAR_WIDTH,
     height: '100%',
 
@@ -35,9 +32,6 @@ const styles = {
     cursor: 'col-resize',
   },
   [TYPES.BOTTOM]: {
-    backgroundColor: 'red',
-    opacity: 0.4,
-    // @TODO remove dev styless above
     width: '100%',
     height: HANDLEBAR_WIDTH,
     bottom: HANDLEBAR_OFFSET,
@@ -45,8 +39,6 @@ const styles = {
     cursor: 'row-resize',
   },
   [TYPES.BOTTOM_RIGHT]: {
-    backgroundColor: 'green',
-    // @TODO remove dev styless above
     width: HANDLEBAR_WIDTH,
     height: HANDLEBAR_WIDTH,
     position: 'absolute',
