@@ -58,8 +58,8 @@ function getConstraints(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
 
-function getCurrentCursorPosition(axis, event) {
-  if (event.type === EVENTS.TOUCH_MOVE) {
+function getCursorPosition(axis, event) {
+  if (event.type === EVENTS.TOUCH_MOVE || event.type === 'touchstart') {
     return event.changedTouches[0][`page${axis.toUpperCase()}`];
   }
 
@@ -113,7 +113,7 @@ export function Resizer({
     const getCursorCoordinates = axis => ({
       [axis]: {
         initial: initialCursorPosition && initialCursorPosition[axis],
-        current: getCurrentCursorPosition(axis, e),
+        current: getCursorPosition(axis, e),
       },
     });
 
@@ -123,6 +123,7 @@ export function Resizer({
 
         // @TODO DRY
         const width = containerWidth + x.current - x.initial;
+
         setContainerWidth(getConstraints(width, minWidth, maxWidth));
         break;
       }
@@ -157,12 +158,12 @@ export function Resizer({
     setHandlebar(null);
   }, []);
 
-  const handleCursorDown = (
-    { clientX, clientY }: HandlebarEvent,
-    type: HandlebarType
-  ) => {
+  const handleCursorDown = (e: HandlebarEvent, type: HandlebarType) => {
     setCursorDown(true);
-    setInitialCursorPosition({ x: clientX, y: clientY });
+    setInitialCursorPosition({
+      x: getCursorPosition('x', e),
+      y: getCursorPosition('y', e),
+    });
     setHandlebar(type);
   };
 
