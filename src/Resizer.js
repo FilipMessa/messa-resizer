@@ -32,6 +32,8 @@ const EVENTS = {
   MOUSE_UP: 'mouseup',
 };
 
+const UNIT = 'px';
+
 type Props = {|
   +className?: string,
   +defaultWidth?: number | 'auto',
@@ -67,12 +69,16 @@ export function Resizer({
     +y: number,
   |}>(null);
 
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     // aka componentDidMount: if the defaultWidth is set to 'auto', measure real width
-    if (containerWidth === 'auto') {
-      const { width, height } = containerRef.current.getBoundingClientRect();
+    if (containerRef && containerWidth === 'auto') {
+      /*
+       * FLow does not yet support method or property calls in optional chains.
+       * $FlowIssue: https://github.com/facebook/flow/issues/4303
+       */
+      const { width, height } = containerRef.current?.getBoundingClientRect();
       setContainerWidth(width);
       setContainerHeight(height);
     }
@@ -81,10 +87,9 @@ export function Resizer({
 
   const handleCursorMove = e => {
     const initalX = initialCursorPosition?.x;
-    if (initalX) {
-      const xPosition = getCursorPosition('x', e);
-
-      // @TODO refactor - find a cleaner way
+    const xPosition = getCursorPosition('x', e);
+    // @TODO refactor - find a cleaner way
+    if (initalX && xPosition && typeof containerWidth === 'number') {
       let newWidth = containerWidth + xPosition - initalX;
 
       if (newWidth < minWidth) {
@@ -139,14 +144,15 @@ export function Resizer({
       touchAction: 'none',
       userSelect: isCursorDown ? 'none' : 'auto',
 
-      width: containerWidth,
-      height: containerHeight,
+      width: `${containerWidth}${UNIT}`,
+      height: `${containerHeight}${UNIT}`,
     },
   };
 
   return (
     <div ref={containerRef} style={styles.container} className={className}>
-      <Handlebar onMove={handleOnHandlebarClick} />
+      <Handlebar type="left" onMove={handleOnHandlebarClick} />
+      <Handlebar type="bottom" onMove={handleOnHandlebarClick} />
       [WIP] Resizer
     </div>
   );

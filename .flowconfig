@@ -8,7 +8,16 @@ flow-typed
 [lints]
 
 [options]
+emoji=true
+exact_by_default=false
+include_warnings=true
 esproposal.optional_chaining=enable
+
+; Following comments allow you to suppress some known issues which are already reported or fix is ready.
+; No issue/PR available? Create one!
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue: https://github.com/\\(facebook/flow\\|flow-typed/flow-typed\\)/issues/[0-9]+
+suppress_comment=\\(.\\|\n\\)*\\$FlowPullRequest: https://github.com/\\(facebook/flow\\|flow-typed/flow-typed\\)/pull/[0-9]+
+
 
 [strict]
 
