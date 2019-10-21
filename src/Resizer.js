@@ -19,9 +19,10 @@ import React from 'react';
 import { Handlebar, type HandlebarEvent } from './Handlebar';
 
 const DEFAULT_PROPS = {
-  WIDTH: 150,
+  WIDTH: 'auto',
   HEIGHT: 100,
-  MIN_WIDTH: 1,
+  MIN_WIDTH: 20, // @TODO - should be same const like in the Handlebar width
+  MAX_WIDTH: window.innerWidth, // @TODO??
 };
 
 const EVENTS = {
@@ -33,11 +34,11 @@ const EVENTS = {
 
 type Props = {|
   +className?: string,
-  +defaultWidth?: number,
+  +defaultWidth?: number | 'auto',
   +defaultHeight?: string,
 |};
 
-type CursorEvent = any; // SyntheticMouseEvent<> | SyntheticTouchEvent<>;
+type CursorEvent = any; // @TODO //MouseEvent | TouchEvent; or SyntheticMouseEvent<> | SyntheticTouchEvent<>;
 
 function getCursorPosition(axis: 'x' | 'y', event: CursorEvent): ?number {
   switch (event.type) {
@@ -55,12 +56,10 @@ export function Resizer({
   defaultWidth = DEFAULT_PROPS.WIDTH,
   defaultHeight = DEFAULT_PROPS.HEIGHT,
   minWidth = DEFAULT_PROPS.MIN_WIDTH,
+  maxWidth = DEFAULT_PROPS.MAX_WIDTH,
 }: Props) {
-  const [rootWidth, setRootWidth] = React.useState(defaultWidth);
-  const [
-    rootHeight,
-    //  setRootHeight
-  ] = React.useState(defaultHeight);
+  const [containerWidth, setContainerWidth] = React.useState(defaultWidth);
+  const [containerHeight, setContainerHeight] = React.useState(defaultHeight);
   const [isCursorDown, setCursorDown] = React.useState(false);
 
   const [initialCursorPosition, setInitialCursorPosition] = React.useState<?{|
@@ -68,24 +67,41 @@ export function Resizer({
     +y: number,
   |}>(null);
 
-  // const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    // aka componentDidMount: if the defaultWidth is set to 'auto', measure real width
+    if (containerWidth === 'auto') {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setContainerWidth(width);
+      setContainerHeight(height);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCursorMove = e => {
     const initalX = initialCursorPosition?.x;
     if (initalX) {
       const xPosition = getCursorPosition('x', e);
 
-      // @TODO refactor (maxWidth)
-      const newWidth = rootWidth + xPosition - initalX;
+      // @TODO refactor - find a cleaner way
+      let newWidth = containerWidth + xPosition - initalX;
 
-      setRootWidth(minWidth > newWidth ? minWidth : newWidth);
+      if (newWidth < minWidth) {
+        newWidth = minWidth;
+      }
+      if (newWidth > maxWidth) {
+        newWidth = maxWidth;
+      }
+
+      setContainerWidth(newWidth);
     }
   };
 
-  const handleCursorUp = () => {
+  const handleCursorUp = React.useCallback(() => {
     setCursorDown(false);
     setInitialCursorPosition(null);
-  };
+  }, []);
 
   React.useEffect(() => {
     if (isCursorDown) {
@@ -114,28 +130,22 @@ export function Resizer({
   };
 
   const styles = {
-    root: {
+    container: {
       margin: '2em',
       backgroundColor: 'pink',
       // @TODO remove dev style above
       position: 'relative',
       overflow: 'hidden',
       touchAction: 'none',
+      userSelect: isCursorDown ? 'none' : 'auto',
 
-      width: rootWidth,
-      height: rootHeight,
+      width: containerWidth,
+      height: containerHeight,
     },
   };
 
   return (
-    <div
-      ref={
-        // containerRef @TODO??
-        null
-      }
-      style={styles.root}
-      className={className}
-    >
+    <div ref={containerRef} style={styles.container} className={className}>
       <Handlebar onMove={handleOnHandlebarClick} />
       [WIP] Resizer
     </div>
