@@ -1,14 +1,7 @@
 // @flow
 
 import React from 'react';
-
-/* @TODO
- * - className
- * - style Obj
- */
-
-const HANDLEBAR_WIDTH = '20px';
-const OFFSET = 5;
+import { HANDLEBAR_WIDTH, HANDLEBAR_OFFSET, type Style } from './consts';
 
 const TYPES = Object.freeze({
   RIGHT: 'right',
@@ -20,6 +13,8 @@ export type HandlebarEvent = SyntheticMouseEvent<HTMLDivElement>;
 export type HandlebarType = $Values<typeof TYPES>;
 
 type Props = {|
+  +className?: string,
+  +extendStyle?: Style,
   +onMove: (e: HandlebarEvent, type: HandlebarType) => void,
   +type?: HandlebarType,
 |};
@@ -36,7 +31,7 @@ const styles = {
     height: '100%',
 
     top: 0,
-    right: -OFFSET,
+    right: HANDLEBAR_OFFSET,
     cursor: 'col-resize',
   },
   [TYPES.BOTTOM]: {
@@ -45,7 +40,7 @@ const styles = {
     // @TODO remove dev styless above
     width: '100%',
     height: HANDLEBAR_WIDTH,
-    bottom: -OFFSET,
+    bottom: HANDLEBAR_OFFSET,
     left: 0,
     cursor: 'row-resize',
   },
@@ -55,14 +50,19 @@ const styles = {
     width: HANDLEBAR_WIDTH,
     height: HANDLEBAR_WIDTH,
     position: 'absolute',
-    right: -OFFSET,
-    bottom: -OFFSET,
+    right: HANDLEBAR_OFFSET,
+    bottom: HANDLEBAR_OFFSET,
     cursor: 'nwse-resize',
     zIndex: 100,
   },
 };
 
-export function Handlebar({ onMove, type = TYPES.RIGHT }: Props) {
+export function Handlebar({
+  onMove,
+  type = TYPES.RIGHT,
+  extendStyle,
+  className,
+}: Props) {
   const handleMove = React.useCallback(
     e => {
       onMove(e, type);
@@ -72,15 +72,12 @@ export function Handlebar({ onMove, type = TYPES.RIGHT }: Props) {
 
   return (
     <div
+      className={className}
       style={{
         ...styles.common,
         ...styles[type],
+        ...extendStyle,
       }}
-      role="button"
-      tabIndex={
-        // @TODO??
-        -1
-      }
       onTouchStart={handleMove}
       onMouseDown={handleMove}
     ></div>

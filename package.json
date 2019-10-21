@@ -49,6 +49,7 @@
     "eslint-check": "eslint --print-config src/index.js | eslint-config-prettier-check",
     "lint": "yarn eslint-check && eslint .",
     "type-check": "yarn flow",
-    "test": "jest"
+    "test-only": "jest",
+    "test": "yarn lint && yarn type-check && yarn test-only"
   }
 }

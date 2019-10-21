@@ -4,21 +4,18 @@ exports[`render properly 1`] = `
 <div
   style={
     Object {
-      "backgroundColor": "pink",
-      "height": "autopx",
-      "margin": "2em",
+      "height": "auto",
       "overflow": "hidden",
       "position": "relative",
       "touchAction": "none",
       "userSelect": "auto",
-      "width": "autopx",
+      "width": "auto",
     }
   }
 >
   <div
     onMouseDown={[Function]}
     onTouchStart={[Function]}
-    role="button"
     style={
       Object {
         "backgroundColor": "blue",
@@ -28,46 +25,41 @@ exports[`render properly 1`] = `
         "position": "absolute",
         "right": -5,
         "top": 0,
-        "width": "20px",
+        "width": 20,
       }
     }
-    tabIndex={-1}
   />
   <div
     onMouseDown={[Function]}
     onTouchStart={[Function]}
-    role="button"
     style={
       Object {
         "backgroundColor": "red",
         "bottom": -5,
         "cursor": "row-resize",
-        "height": "20px",
+        "height": 20,
         "left": 0,
         "opacity": 0.4,
         "position": "absolute",
         "width": "100%",
       }
     }
-    tabIndex={-1}
   />
   <div
     onMouseDown={[Function]}
     onTouchStart={[Function]}
-    role="button"
     style={
       Object {
         "backgroundColor": "green",
         "bottom": -5,
         "cursor": "nwse-resize",
-        "height": "20px",
+        "height": 20,
         "position": "absolute",
         "right": -5,
-        "width": "20px",
+        "width": 20,
         "zIndex": 100,
       }
     }
-    tabIndex={-1}
   />
   <div />
 </div>

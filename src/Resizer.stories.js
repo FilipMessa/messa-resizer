@@ -7,8 +7,8 @@ export default {
   title: 'Resizer',
 };
 
-export const basic = () => (
-  <div style={{ display: 'flex', flexDirection: 'row' }}>
+export const playground = () => (
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
     <Resizer>Work in progress</Resizer>
     <Resizer>Work in progress</Resizer>
   </div>

@@ -1,9 +1,13 @@
 // @flow
 
 export const HANDLEBAR_WIDTH = 20;
-export const HANDLEBAR_OFFSET = 5;
+export const HANDLEBAR_OFFSET = -5;
 
-export const UNIT = 'px';
+export const HADLEBARS_TYPES = Object.freeze({
+  RIGHT: 'right',
+  BOTTOM: 'bottom',
+  BOTTOM_RIGHT: 'bottom-right',
+});
 
 export const EVENTS = Object.freeze({
   TOUCH_MOVE: 'touchmove',
@@ -12,8 +16,9 @@ export const EVENTS = Object.freeze({
   MOUSE_UP: 'mouseup',
 });
 
-export const TYPES = Object.freeze({
-  RIGHT: 'right',
-  BOTTOM: 'bottom',
-  BOTTOM_RIGHT: 'bottom-right',
-});
+export const UNIT = 'px';
+
+export type Style = {
+  +[key: string]: string | number,
+  ...,
+};

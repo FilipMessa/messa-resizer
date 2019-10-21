@@ -7,12 +7,13 @@ import {
   type HandlebarType,
 } from './Handlebar';
 
-import { EVENTS, UNIT, TYPES, HANDLEBAR_WIDTH } from './consts';
-
-export type Style = {
-  +[key: string]: string | number,
-  ...,
-};
+import {
+  EVENTS,
+  UNIT,
+  HADLEBARS_TYPES,
+  HANDLEBAR_WIDTH,
+  type Style,
+} from './consts';
 
 type Props = {|
   +className?: string,
@@ -24,6 +25,16 @@ type Props = {|
   +minWidth?: number,
   +maxWidth?: number,
   +style?: Style,
+  +handlersClassNames?: {|
+    +bottom?: string,
+    +right?: string,
+    +'bottom-right'?: string,
+  |},
+  +handlersStyles?: {|
+    +bottom?: Style,
+    +right?: Style,
+    +'bottom-right'?: Style,
+  |},
 |};
 
 const DEFAULT_POSITION = { x: 0, y: 0 };
@@ -42,6 +53,9 @@ function getCurrentCursorPosition(axis, event) {
 
 export function Resizer({
   className,
+  style,
+  handlersClassNames,
+  handlersStyles,
   children,
   defaultWidth,
   defaultHeight,
@@ -49,7 +63,6 @@ export function Resizer({
   maxWidth = Infinity,
   minHeight = HANDLEBAR_WIDTH,
   maxHeight = Infinity,
-  style,
 }: Props) {
   const [containerWidth, setContainerWidth] = React.useState<?number>(
     defaultWidth
@@ -90,7 +103,7 @@ export function Resizer({
     });
 
     switch (handlebar) {
-      case TYPES.RIGHT: {
+      case HADLEBARS_TYPES.RIGHT: {
         const { x } = getCursorCoordinates('x');
 
         // @TODO DRY
@@ -99,7 +112,7 @@ export function Resizer({
         setContainerWidth(validateConstraints(width, minWidth, maxWidth));
         break;
       }
-      case TYPES.BOTTOM: {
+      case HADLEBARS_TYPES.BOTTOM: {
         const { y } = getCursorCoordinates('y');
 
         // @TODO DRY
@@ -107,7 +120,7 @@ export function Resizer({
         setContainerHeight(validateConstraints(height, minHeight, maxHeight));
         break;
       }
-      case TYPES.BOTTOM_RIGHT: {
+      case HADLEBARS_TYPES.BOTTOM_RIGHT: {
         const { x } = getCursorCoordinates('x');
         const { y } = getCursorCoordinates('y');
 
@@ -162,9 +175,6 @@ export function Resizer({
 
   const styles = {
     container: {
-      margin: '2em',
-      backgroundColor: 'pink',
-      // @TODO remove dev style above
       position: 'relative',
       overflow: 'hidden',
       touchAction: 'none',
@@ -175,15 +185,26 @@ export function Resizer({
     },
   };
 
+  // $FlowIssue: https://github.com/facebook/flow/issues/2221
+  const handlebars: HandlebarType[] = Object.values<HandlebarType>(
+    HADLEBARS_TYPES
+  );
+
   return (
     <div
       ref={containerRef}
       style={{ ...style, ...styles.container }}
       className={className}
     >
-      <Handlebar type="right" onMove={handleCursorDown} />
-      <Handlebar type="bottom" onMove={handleCursorDown} />
-      <Handlebar type="bottom-right" onMove={handleCursorDown} />
+      {handlebars.map(type => (
+        <Handlebar
+          key={type}
+          type={type}
+          onMove={handleCursorDown}
+          className={handlersClassNames && handlersClassNames[type]}
+          extendStyle={handlersStyles && handlersStyles[type]}
+        />
+      ))}
       {children}
     </div>
   );
