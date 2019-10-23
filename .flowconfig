@@ -18,8 +18,11 @@ esproposal.optional_chaining=enable
 suppress_comment=\\(.\\|\n\\)*\\$FlowIssue: https://github.com/\\(facebook/flow\\|flow-typed/flow-typed\\)/issues/[0-9]+
 suppress_comment=\\(.\\|\n\\)*\\$FlowPullRequest: https://github.com/\\(facebook/flow\\|flow-typed/flow-typed\\)/pull/[0-9]+
 
+; This comment should annotate errors which are expected to occur and it's correct that Flow complains
+; about it. It's frequently used in tests or in flowtests.
+suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError: .+
 
 [strict]
 
 [version]
-0.109.0
+0.110.0

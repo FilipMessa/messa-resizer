@@ -1,16 +1,18 @@
 // @flow
 
 import React from 'react';
-import { HANDLEBAR_WIDTH, HANDLEBAR_OFFSET, type Style } from './consts';
+import {
+  HANDLEBAR_WIDTH,
+  HANDLEBAR_OFFSET,
+  HADLEBARS_TYPES,
+  type Style,
+} from './common';
 
-const TYPES = Object.freeze({
-  RIGHT: 'right',
-  BOTTOM: 'bottom',
-  BOTTOM_RIGHT: 'bottom-right',
-});
+export type HandlebarEvent =
+  | SyntheticTouchEvent<HTMLDivElement>
+  | SyntheticMouseEvent<HTMLDivElement>;
 
-export type HandlebarEvent = SyntheticMouseEvent<HTMLDivElement>;
-export type HandlebarType = $Values<typeof TYPES>;
+export type HandlebarType = $Values<typeof HADLEBARS_TYPES>;
 
 type Props = {|
   +className?: string,
@@ -23,37 +25,43 @@ const styles = {
   common: {
     position: 'absolute',
   },
-  [TYPES.RIGHT]: {
-    width: HANDLEBAR_WIDTH,
-    height: '100%',
-
-    top: 0,
-    right: HANDLEBAR_OFFSET,
+  [HADLEBARS_TYPES.RIGHT]: {
     cursor: 'col-resize',
+    zIndex: 1,
+
+    height: '100%',
+    width: HANDLEBAR_WIDTH,
+
+    right: HANDLEBAR_OFFSET,
+    top: 0,
   },
-  [TYPES.BOTTOM]: {
+  [HADLEBARS_TYPES.BOTTOM]: {
+    cursor: 'row-resize',
+    zIndex: 1,
+
     width: '100%',
     height: HANDLEBAR_WIDTH,
-    bottom: HANDLEBAR_OFFSET,
+
     left: 0,
-    cursor: 'row-resize',
+    bottom: HANDLEBAR_OFFSET,
   },
-  [TYPES.BOTTOM_RIGHT]: {
-    width: HANDLEBAR_WIDTH,
+  [HADLEBARS_TYPES.BOTTOM_RIGHT]: {
+    cursor: 'nwse-resize',
+    zIndex: 2,
+
     height: HANDLEBAR_WIDTH,
-    position: 'absolute',
+    width: HANDLEBAR_WIDTH,
+
     right: HANDLEBAR_OFFSET,
     bottom: HANDLEBAR_OFFSET,
-    cursor: 'nwse-resize',
-    zIndex: 100,
   },
 };
 
 export function Handlebar({
-  onMove,
-  type = TYPES.RIGHT,
+  type = HADLEBARS_TYPES.RIGHT,
   extendStyle,
   className,
+  onMove,
 }: Props) {
   const handleMove = React.useCallback(
     e => {
@@ -64,12 +72,12 @@ export function Handlebar({
 
   return (
     <div
-      className={className}
       style={{
         ...styles.common,
         ...styles[type],
         ...extendStyle,
       }}
+      className={className}
       onTouchStart={handleMove}
       onMouseDown={handleMove}
     ></div>

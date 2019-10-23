@@ -24,6 +24,7 @@ exports[`render properly 1`] = `
         "right": -5,
         "top": 0,
         "width": 20,
+        "zIndex": 1,
       }
     }
   />
@@ -38,6 +39,7 @@ exports[`render properly 1`] = `
         "left": 0,
         "position": "absolute",
         "width": "100%",
+        "zIndex": 1,
       }
     }
   />
@@ -52,7 +54,7 @@ exports[`render properly 1`] = `
         "position": "absolute",
         "right": -5,
         "width": 20,
-        "zIndex": 100,
+        "zIndex": 2,
       }
     }
   />

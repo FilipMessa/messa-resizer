@@ -8,12 +8,24 @@ import {
 } from './Handlebar';
 
 import {
+  getCursorPosition,
+  getConstraints,
+  validateWidth,
+  validateHeight,
+} from './helpers';
+
+import {
   EVENTS,
   UNIT,
   HADLEBARS_TYPES,
   HANDLEBAR_WIDTH,
   type Style,
-} from './consts';
+} from './common';
+
+const DEFAULT_POSITION = {
+  x: 0,
+  y: 0,
+};
 
 type Props = {|
   +className?: string,
@@ -37,39 +49,15 @@ type Props = {|
   |},
 |};
 
-const DEFAULT_POSITION = { x: 0, y: 0 };
-
-function createDefaultStateValidation(state) {
-  return function validateState(defaultValue, maxValue) {
-    if (defaultValue && defaultValue > maxValue) {
-      console.warn(
-        `The prop ${state} deafult value is greater than maximum value!`
-      );
-      return maxValue;
-    }
-    return defaultValue;
-  };
-}
-
-const validateWidth = createDefaultStateValidation('width');
-const validateHeight = createDefaultStateValidation('height');
-
-function getConstraints(n, min, max) {
-  return Math.max(Math.min(n, max), min);
-}
-
-function getCursorPosition(axis, event) {
-  if (event.type === EVENTS.TOUCH_MOVE || event.type === 'touchstart') {
-    return event.changedTouches[0][`page${axis.toUpperCase()}`];
-  }
-
-  return event[`page${axis.toUpperCase()}`];
-}
+type Position = {|
+  +x: number,
+  +y: number,
+|};
 
 export function Resizer({
   className,
-  style,
   handlersClassNames,
+  style,
   handlersStyles,
   children,
   defaultWidth,
@@ -86,14 +74,17 @@ export function Resizer({
     validateHeight(defaultHeight, maxHeight)
   );
 
-  const [handlebar, setHandlebar] = React.useState<HandlebarType | null>(null);
   const [isCursorDown, setCursorDown] = React.useState<boolean>(false);
 
-  const [initialCursorPosition, setInitialCursorPosition] = React.useState<{|
-    +x: number,
-    +y: number,
-  |}>(DEFAULT_POSITION);
+  const [
+    handlebarType,
+    setHandlebarType,
+  ] = React.useState<HandlebarType | null>(null);
 
+  const [
+    initialCursorPosition,
+    setInitialCursorPosition,
+  ] = React.useState<Position>(DEFAULT_POSITION);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -117,7 +108,7 @@ export function Resizer({
       },
     });
 
-    switch (handlebar) {
+    switch (handlebarType) {
       case HADLEBARS_TYPES.RIGHT: {
         const { x } = getCursorCoordinates('x');
 
@@ -155,7 +146,7 @@ export function Resizer({
   const handleCursorUp = React.useCallback(() => {
     setCursorDown(false);
     setInitialCursorPosition(DEFAULT_POSITION);
-    setHandlebar(null);
+    setHandlebarType(null);
   }, []);
 
   const handleCursorDown = (e: HandlebarEvent, type: HandlebarType) => {
@@ -164,7 +155,7 @@ export function Resizer({
       x: getCursorPosition('x', e),
       y: getCursorPosition('y', e),
     });
-    setHandlebar(type);
+    setHandlebarType(type);
   };
 
   React.useEffect(() => {

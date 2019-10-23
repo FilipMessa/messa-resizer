@@ -9,7 +9,16 @@ export const HADLEBARS_TYPES = Object.freeze({
   BOTTOM_RIGHT: 'bottom-right',
 });
 
-export const EVENTS = Object.freeze({
+type EventsType = {|
+  +TOUCH_START: 'touchstart',
+  +TOUCH_MOVE: 'touchmove',
+  +TOUCH_END: 'touchend',
+  +MOUSE_MOVE: 'mousemove',
+  +MOUSE_UP: 'mouseup',
+|};
+
+export const EVENTS: EventsType = Object.freeze({
+  TOUCH_START: 'touchstart',
   TOUCH_MOVE: 'touchmove',
   TOUCH_END: 'touchend',
   MOUSE_MOVE: 'mousemove',
