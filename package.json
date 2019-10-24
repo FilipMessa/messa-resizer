@@ -1,6 +1,6 @@
 {
   "name": "messa-resizer",
-  "version": "0.0.6",
+  "version": "0.0.60",
   "description": "React resizer component.",
   "main": "lib/index.js",
   "author": "filip.messa@gmail.com",
@@ -40,14 +40,18 @@
     "flow-bin": "^0.110.0",
     "jest": "^24.9.0",
     "prettier": "^1.16.4",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
-    "webpack-node-externals": "^1.7.2"
+    "rollup": "^1.25.2",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-babel-minify": "^9.1.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^6.2.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.0"
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build:storybook": "build-storybook",
-    "build": "webpack --mode production",
+    "build": "rollup -c rollup.config.babel.js",
     "eslint-check": "eslint --print-config src/index.js | eslint-config-prettier-check",
     "lint": "yarn eslint-check && eslint .",
     "type-check": "yarn flow",
