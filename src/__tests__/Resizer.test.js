@@ -115,3 +115,17 @@ describe('Resizer', () => {
     );
   });
 });
+
+/*
+ * TESTs: TODOS
+ * 1. test is style are passed into the resizer container
+ * 2. test if classname is passend inot the container
+ *
+ * 3. test styles for HandleBar
+ * 4. test classnames for handlebar
+ *
+ *
+ * 5. test default sizez and max sizes
+ */
+
+]

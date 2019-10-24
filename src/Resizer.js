@@ -182,10 +182,9 @@ export function Resizer({
   const styles = {
     container: {
       position: 'relative',
-      overflow: 'hidden',
+      // overflow: 'hidden',
       touchAction: 'none',
       userSelect: isCursorDown ? 'none' : 'auto',
-
       width: containerWidth ? `${containerWidth}${UNIT}` : 'auto',
       height: containerHeight ? `${containerHeight}${UNIT}` : 'auto',
     },
@@ -210,7 +209,11 @@ export function Resizer({
           onMove={handleCursorDown}
           className={handlersClassNames && handlersClassNames[type]}
           extendStyle={handlersStyles && handlersStyles[type]}
-        />
+        >
+          <div style={{ width: 40, height: 40, backgroundColor: 'green' }}>
+            *k
+          </div>
+        </Handlebar>
       ))}
       {children}
     </div>

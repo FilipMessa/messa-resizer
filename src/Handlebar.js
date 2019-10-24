@@ -25,8 +25,14 @@ const styles = {
   common: {
     position: 'absolute',
   },
+  withChildren: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   [HADLEBARS_TYPES.RIGHT]: {
-    cursor: 'col-resize',
+    // cursor: 'col-resize',
     zIndex: 1,
 
     height: '100%',
@@ -36,7 +42,7 @@ const styles = {
     top: 0,
   },
   [HADLEBARS_TYPES.BOTTOM]: {
-    cursor: 'row-resize',
+    // cursor: 'row-resize',
     zIndex: 1,
 
     width: '100%',
@@ -46,7 +52,7 @@ const styles = {
     bottom: HANDLEBAR_OFFSET,
   },
   [HADLEBARS_TYPES.BOTTOM_RIGHT]: {
-    cursor: 'nwse-resize',
+    // cursor: 'nwse-resize',
     zIndex: 2,
 
     height: HANDLEBAR_WIDTH,
@@ -57,11 +63,35 @@ const styles = {
   },
 };
 
+const getCursorStyle = type => {
+  let cursor;
+  switch (type) {
+    case HADLEBARS_TYPES.BOTTOM_RIGHT: {
+      cursor = 'nwse-resize';
+      break;
+    }
+    case HADLEBARS_TYPES.RIGHT: {
+      cursor = 'col-resize';
+      break;
+    }
+    case HADLEBARS_TYPES.BOTTOM: {
+      cursor = 'row-resize';
+      break;
+    }
+    default:
+      cursor = 'auto';
+  }
+  return {
+    cursor,
+  };
+};
+
 export function Handlebar({
   type = HADLEBARS_TYPES.RIGHT,
   extendStyle,
   className,
   onMove,
+  children,
 }: Props) {
   const handleMove = React.useCallback(
     e => {
@@ -70,6 +100,8 @@ export function Handlebar({
     [onMove, type]
   );
 
+  const cursorStyle = getCursorStyle(type);
+
   return (
     <div
       data-testid={`handlebar-${type}`}
@@ -77,10 +109,24 @@ export function Handlebar({
         ...styles.common,
         ...styles[type],
         ...extendStyle,
+        ...(children && styles.withChildren),
+        ...(children == null && cursorStyle),
       }}
       className={className}
-      onTouchStart={handleMove}
-      onMouseDown={handleMove}
-    ></div>
+      {...(!children && {
+        onTouchStart: handleMove,
+        onMouseDown: handleMove,
+      })}
+    >
+      {children && (
+        <div
+          onTouchStart={handleMove}
+          onMouseDown={handleMove}
+          style={cursorStyle}
+        >
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
