@@ -9,6 +9,13 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2"
   },
+  "keywords": [
+    "react",
+    "resizer component",
+    "component",
+    "resizer"
+  ],
+  "repository": "https://github.com/FilipMessa/messa-resizer",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.6.4",
