@@ -72,6 +72,7 @@ export function Handlebar({
 
   return (
     <div
+      data-testid={`handlebar-${type}`}
       style={{
         ...styles.common,
         ...styles[type],

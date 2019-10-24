@@ -198,6 +198,7 @@ export function Resizer({
 
   return (
     <div
+      data-testid="handlebar-container"
       ref={containerRef}
       style={{ ...style, ...styles.container }}
       className={className}
