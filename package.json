@@ -1,6 +1,6 @@
 {
   "name": "messa-resizer",
-  "version": "0.0.60",
+  "version": "0.0.62",
   "description": "React resizer component.",
   "main": "lib/index.js",
   "author": "filip.messa@gmail.com",

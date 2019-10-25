@@ -7,16 +7,17 @@ storybook: https://resizer.messafilip.now.sh
 ## Main Scripts
 
 add to your a project
-``sh
+
+```sh
 yarn add messa-resizer
 
-````
+```
 
 install dependencies
 
 ```sh
 yarn install
-````
+```
 
 run storybook:
 
