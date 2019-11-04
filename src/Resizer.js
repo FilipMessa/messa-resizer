@@ -96,14 +96,12 @@ export function Resizer({
 
     setContainerWidth(width);
     setContainerHeight(height);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef]);
 
   const handleCursorMove = e => {
     const getCursorCoordinates = axis => ({
       [axis]: {
-        initial: initialCursorPosition && initialCursorPosition[axis],
+        initial: initialCursorPosition[axis],
         current: getCursorPosition(axis, e),
       },
     });
