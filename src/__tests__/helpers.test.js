@@ -11,31 +11,31 @@ global.console = {
   warn: jest.fn(msg => msg),
 };
 
-const TouchEvent = {
-  type: 'touchstart',
+const touchEvent: any = new TouchEvent('touchstart', {
   changedTouches: [{ pageX: 160, pageY: 203 }],
-};
+});
 
-const MouseEvent = { pageX: 160, pageY: 203 };
+const mouseEvent: any = new MouseEvent('mousemove', {
+  pageX: 160,
+  pageY: 203,
+});
 
 const axis = ['y', 'x'];
 
 describe('getCursorPosition', () => {
   axis.forEach(a => {
     it(`get ${a} postion from the TouchEvent`, () => {
-      // $FlowExpectedError: for test purpose I use simplified mocked event
-      const result = getCursorPosition(a, TouchEvent);
+      const result = getCursorPosition(a, touchEvent);
       expect(result).toEqual(
-        TouchEvent.changedTouches[0][`page${a.toUpperCase()}`]
+        touchEvent.changedTouches[0][`page${a.toUpperCase()}`]
       );
     });
   });
 
   axis.forEach(a => {
-    it(`get ${a} postion from the TouchEvent`, () => {
-      // $FlowExpectedError: for test purpose I use simplified mocked event
-      const result = getCursorPosition(a, MouseEvent);
-      expect(result).toEqual(MouseEvent[`page${a.toUpperCase()}`]);
+    it(`get ${a} postion from the MouseEvent`, () => {
+      const result = getCursorPosition(a, mouseEvent);
+      expect(result).toEqual(mouseEvent[`page${a.toUpperCase()}`]);
     });
   });
 });
