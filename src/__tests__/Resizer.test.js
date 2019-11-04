@@ -4,6 +4,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup } from '@testing-library/react';
 import puppeteer from 'puppeteer';
+import { isDebugging } from '../testConfig';
 import { Resizer } from '../Resizer';
 import { HADLEBARS_TYPES } from '../common';
 
@@ -25,11 +26,11 @@ const text = 'Live long and prosper';
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 80,
     args: [`--window-size=${WIDTH},${HEIGHT}`],
+    ...isDebugging()?.config,
   });
   page = await browser.newPage();
+
   await page.setViewport({ width: WIDTH, height: HEIGHT });
 });
 afterAll(() => {

@@ -5,6 +5,9 @@
   "env": {
     "test": {
       "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]]
+    },
+    "debug": {
+      "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]]
     }
   }
 }

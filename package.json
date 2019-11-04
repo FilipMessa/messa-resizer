@@ -64,6 +64,7 @@
     "lint": "yarn eslint-check && eslint .",
     "type-check": "yarn flow",
     "test-only": "jest",
+    "test-only:debug": "NODE_ENV=debug yarn jest",
     "test": "yarn lint && yarn type-check && yarn test-only"
   }
 }
