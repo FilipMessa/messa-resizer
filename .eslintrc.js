@@ -23,7 +23,7 @@ module.exports = {
     "import/no-extraneous-dependencies": [
       ERROR,
       {
-        devDependencies: ["src/*.stories.js", "rollup.config.babel.js", "**/*.test.js"],
+        devDependencies: ["src/*.stories.js", "rollup.config.babel.js", "**/*.test.js", "**/*.spec.js"],
       },
     ],
      // flowtype (https://github.com/gajus/eslint-plugin-flowtype)

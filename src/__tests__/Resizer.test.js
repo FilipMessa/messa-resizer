@@ -3,8 +3,17 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup } from '@testing-library/react';
+import puppeteer from 'puppeteer';
 import { Resizer } from '../Resizer';
 import { HADLEBARS_TYPES } from '../common';
+
+const APP = 'http://localhost:6006/';
+let page;
+let browser;
+const WIDTH = 1920;
+const HEIGHT = 1080;
+const X_AXIS = 400;
+const Y_AXIS = 120;
 
 const containerStyles = {
   background: '#C9D6FF',
@@ -14,11 +23,38 @@ const containerStyles = {
 
 const text = 'Live long and prosper';
 
-afterEach(() => {
+beforeAll(async () => {
+  browser = await puppeteer.launch({
+    headless: false,
+    slowMo: 80,
+    args: [`--window-size=${WIDTH},${HEIGHT}`],
+  });
+  page = await browser.newPage();
+  await page.setViewport({ width: WIDTH, height: HEIGHT });
+});
+afterAll(() => {
+  browser.close();
   cleanup();
 });
 
 describe('Resizer', () => {
+  async function makeMouseAction(boundingBox) {
+    await page.mouse.move(
+      boundingBox.x + boundingBox.width / 2,
+      boundingBox.y + boundingBox.height / 2
+    );
+
+    await page.mouse.down();
+    await page.mouse.move(X_AXIS, Y_AXIS);
+    await page.mouse.up();
+  }
+
+  async function getIframe() {
+    await page.goto(APP);
+    const iframeElement = await page.waitForSelector('iframe');
+    const frame = await iframeElement.contentFrame();
+    return frame;
+  }
   test('should render properly', () => {
     const { container } = render(<Resizer />);
 
@@ -113,5 +149,99 @@ describe('Resizer', () => {
     expect(getByTestId('handlebar-bottom-right')).toHaveClass(
       handlersClassNames['bottom-right']
     );
+  });
+  test('drag right handlebar', async () => {
+    const iframe = await getIframe();
+    const resizer = await iframe.waitForSelector(
+      '[data-testid="handlebar-container"]'
+    );
+
+    const rightHandler = await iframe.waitForSelector(
+      '[data-testid="handlebar-right"]'
+    );
+
+    const boundingBox = await rightHandler.boundingBox();
+    expect(await resizer.boundingBox()).toMatchInlineSnapshot(`
+        Object {
+          "height": 300,
+          "width": 300,
+          "x": 233,
+          "y": 73,
+        }
+      `);
+
+    await makeMouseAction(boundingBox);
+
+    expect(await resizer.boundingBox()).toMatchInlineSnapshot(`
+        Object {
+          "height": 300,
+          "width": 172,
+          "x": 233,
+          "y": 73,
+        }
+      `);
+  });
+  test('drag bottom handlebar', async () => {
+    const iframe = await getIframe();
+    const resizer = await iframe.waitForSelector(
+      '[data-testid="handlebar-container"]'
+    );
+
+    const bottomHandler = await iframe.waitForSelector(
+      '[data-testid="handlebar-bottom"]'
+    );
+
+    const boundingBox = await bottomHandler.boundingBox();
+    expect(await resizer.boundingBox()).toMatchInlineSnapshot(`
+          Object {
+            "height": 300,
+            "width": 300,
+            "x": 233,
+            "y": 73,
+          }
+      `);
+
+    await makeMouseAction(boundingBox);
+
+    expect(await resizer.boundingBox()).toMatchInlineSnapshot(`
+      Object {
+        "height": 52,
+        "width": 300,
+        "x": 233,
+        "y": 73,
+      }
+    `);
+  });
+
+  test('drag bottom-right handlebar', async () => {
+    const iframe = await getIframe();
+    const resizer = await iframe.waitForSelector(
+      '[data-testid="handlebar-container"]'
+    );
+
+    const handler = await iframe.waitForSelector(
+      '[data-testid="handlebar-bottom-right"]'
+    );
+
+    const boundingBox = await handler.boundingBox();
+    expect(await resizer.boundingBox()).toMatchInlineSnapshot(`
+      Object {
+        "height": 300,
+        "width": 300,
+        "x": 233,
+        "y": 73,
+      }
+    `);
+
+    await makeMouseAction(boundingBox);
+
+    expect(await resizer.boundingBox()).toMatchInlineSnapshot(`
+      Object {
+        "height": 52,
+        "width": 172,
+        "x": 233,
+        "y": 73,
+      }
+    `);
   });
 });
