@@ -11,7 +11,7 @@ import {
 } from './helpers';
 
 import useWindowListeners from './useWindowListeners';
-
+import useSize from './useSize';
 import {
   UNIT,
   HADLEBARS_TYPES,
@@ -65,12 +65,10 @@ export function Resizer({
   minHeight = HANDLEBAR_WIDTH,
   maxHeight = Infinity,
 }: Props) {
-  const [containerWidth, setContainerWidth] = React.useState<?number>(
-    validateWidth(defaultWidth, maxWidth)
-  );
-  const [containerHeight, setContainerHeight] = React.useState<?number>(
-    validateHeight(defaultHeight, maxHeight)
-  );
+  const [size, setSize] = useSize({
+    height: validateHeight(defaultHeight, maxHeight),
+    width: validateWidth(defaultWidth, maxWidth),
+  });
 
   const [isCursorDown, setCursorDown] = React.useState<boolean>(false);
 
@@ -98,17 +96,18 @@ export function Resizer({
         const { x } = getCursorCoordinates('x');
 
         // @TODO DRY
-        const width = containerWidth + x.current - x.initial;
+        const width = size.width + x.current - x.initial;
 
-        setContainerWidth(getConstraints(width, minWidth, maxWidth));
+        setSize({ width: getConstraints(width, minWidth, maxWidth) });
         break;
       }
       case HADLEBARS_TYPES.BOTTOM: {
         const { y } = getCursorCoordinates('y');
 
         // @TODO DRY
-        const height = containerHeight + y.current - y.initial;
-        setContainerHeight(getConstraints(height, minHeight, maxHeight));
+        const height = size.height + y.current - y.initial;
+        setSize({ height: getConstraints(height, minHeight, maxHeight) });
+
         break;
       }
       case HADLEBARS_TYPES.BOTTOM_RIGHT: {
@@ -116,11 +115,14 @@ export function Resizer({
         const { y } = getCursorCoordinates('y');
 
         // @TODO DRY
-        const width = containerWidth + x.current - x.initial;
-        const height = containerHeight + y.current - y.initial;
+        const width = size.width + x.current - x.initial;
+        const height = size.height + y.current - y.initial;
 
-        setContainerWidth(getConstraints(width, minWidth, maxWidth));
-        setContainerHeight(getConstraints(height, minHeight, maxHeight));
+        setSize({
+          height: getConstraints(height, minHeight, maxHeight),
+          width: getConstraints(width, minWidth, maxWidth),
+        });
+
         break;
       }
       default:
@@ -155,9 +157,8 @@ export function Resizer({
      */
     const { width, height } = containerRef.current?.getBoundingClientRect();
 
-    setContainerWidth(width);
-    setContainerHeight(height);
-  }, [containerRef]);
+    setSize({ width, height });
+  }, [containerRef, setSize]);
 
   const styles = {
     container: {
@@ -166,8 +167,8 @@ export function Resizer({
       touchAction: 'none',
       userSelect: isCursorDown ? 'none' : 'auto',
 
-      width: containerWidth ? `${containerWidth}${UNIT}` : 'auto',
-      height: containerHeight ? `${containerHeight}${UNIT}` : 'auto',
+      width: size.width ? `${size.width}${UNIT}` : 'auto',
+      height: size.height ? `${size.height}${UNIT}` : 'auto',
     },
   };
 
