@@ -3,22 +3,11 @@
 import * as React from 'react';
 import { Handlebar, type HandlebarType } from './Handlebar';
 
-import {
-  getCursorPosition,
-  getConstraints,
-  validateWidth,
-  validateHeight,
-} from './helpers';
+import { getConstraints, validateWidth, validateHeight } from './helpers';
 
 import useWindowListeners from './useWindowListeners';
 import useSize from './useSize';
-import {
-  UNIT,
-  HADLEBARS_TYPES,
-  HANDLEBAR_WIDTH,
-  type Style,
-  type CursorEvent,
-} from './common';
+import { UNIT, HADLEBARS_TYPES, HANDLEBAR_WIDTH, type Style } from './common';
 
 const DEFAULT_POSITION = {
   x: 0,
@@ -136,12 +125,9 @@ export function Resizer({
     setHandlebarType(null);
   }, []);
 
-  const handleCursorDown = (e: CursorEvent, type: HandlebarType) => {
+  const handleCursorDown = ({ x, y, type }) => {
     setCursorDown(true);
-    setInitialCursorPosition({
-      x: getCursorPosition('x', e),
-      y: getCursorPosition('y', e),
-    });
+    setInitialCursorPosition({ x, y });
     setHandlebarType(type);
   };
 

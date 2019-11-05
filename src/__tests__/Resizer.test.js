@@ -8,6 +8,8 @@ import { isDebugging } from '../../testUtils/testConfig';
 import { Resizer } from '../Resizer';
 import { HADLEBARS_TYPES } from '../common';
 
+// @TODO test TouchEvent https://pptr.dev/#?product=Puppeteer&version=v2.0.0&show=api-pagetouchscreen
+
 const APP = 'http://localhost:6006/';
 let page;
 let browser;

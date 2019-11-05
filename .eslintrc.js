@@ -15,7 +15,8 @@ module.exports = {
   ],
   rules: {
     // custom
-    "o-unused-expressions": OFF,
+    "no-unused-expressions": OFF,
+    "no-unused-vars": ERROR,
     "jsx-a11y/interactive-supports-focus": OFF,
     "jsx-a11y/no-static-element-interactions": OFF,
     // extra prettier rules

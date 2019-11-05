@@ -6,15 +6,16 @@ import {
   HANDLEBAR_OFFSET,
   HADLEBARS_TYPES,
   type Style,
-  type CursorEvent,
 } from './common';
+
+import { getCursorPosition } from './helpers';
 
 export type HandlebarType = $Values<typeof HADLEBARS_TYPES>;
 
 type Props = {|
   +className?: string,
   +extendStyle?: Style,
-  +onPressDown: (e: CursorEvent, type: HandlebarType) => void,
+  +onPressDown: ({| +type: HandlebarType, x: number, y: number |}) => void,
   +onPressUp: () => void,
   +type?: HandlebarType,
 |};
@@ -64,7 +65,9 @@ export function Handlebar({
 }: Props) {
   const handlePressDown = React.useCallback(
     e => {
-      onPressDown(e, type);
+      const x = getCursorPosition('x', e);
+      const y = getCursorPosition('y', e);
+      onPressDown({ x, y, type });
     },
     [onPressDown, type]
   );
