@@ -1,7 +1,6 @@
 // @flow
 
-import { EVENTS } from './common';
-import type { HandlebarEvent } from './Handlebar';
+import { EVENTS, type CursorEvent } from './common';
 
 export function getConstraints(n: number, min: number, max: number) {
   return Math.max(Math.min(n, max), min);
@@ -31,7 +30,7 @@ export const validateHeight = createDefaultStateValidation('height');
 
 type Axis = 'x' | 'y';
 
-export function getCursorPosition(axis: Axis, event: HandlebarEvent): number {
+export function getCursorPosition(axis: Axis, event: CursorEvent): number {
   const axisType = `page${axis.toUpperCase()}`;
   if (event.type === EVENTS.TOUCH_MOVE || event.type === EVENTS.TOUCH_START) {
     /*

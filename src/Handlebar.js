@@ -6,18 +6,15 @@ import {
   HANDLEBAR_OFFSET,
   HADLEBARS_TYPES,
   type Style,
+  type CursorEvent,
 } from './common';
-
-export type HandlebarEvent =
-  | SyntheticTouchEvent<HTMLDivElement>
-  | SyntheticMouseEvent<HTMLDivElement>;
 
 export type HandlebarType = $Values<typeof HADLEBARS_TYPES>;
 
 type Props = {|
   +className?: string,
   +extendStyle?: Style,
-  +onPressDown: (e: HandlebarEvent, type: HandlebarType) => void,
+  +onPressDown: (e: CursorEvent, type: HandlebarType) => void,
   +onPressUp: () => void,
   +type?: HandlebarType,
 |};

@@ -1,11 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import {
-  Handlebar,
-  type HandlebarEvent,
-  type HandlebarType,
-} from './Handlebar';
+import { Handlebar, type HandlebarType } from './Handlebar';
 
 import {
   getCursorPosition,
@@ -14,12 +10,14 @@ import {
   validateHeight,
 } from './helpers';
 
+import useWindowListeners from './useWindowListeners';
+
 import {
-  EVENTS,
   UNIT,
   HADLEBARS_TYPES,
   HANDLEBAR_WIDTH,
   type Style,
+  type CursorEvent,
 } from './common';
 
 const DEFAULT_POSITION = {
@@ -87,17 +85,6 @@ export function Resizer({
   ] = React.useState<Position>(DEFAULT_POSITION);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  React.useEffect(() => {
-    /*
-     * FLow does not yet support method or property calls in optional chains.
-     * $FlowIssue: https://github.com/facebook/flow/issues/4303
-     */
-    const { width, height } = containerRef.current?.getBoundingClientRect();
-
-    setContainerWidth(width);
-    setContainerHeight(height);
-  }, [containerRef]);
-
   const handleCursorMove = e => {
     const getCursorCoordinates = axis => ({
       [axis]: {
@@ -147,7 +134,7 @@ export function Resizer({
     setHandlebarType(null);
   }, []);
 
-  const handleCursorDown = (e: HandlebarEvent, type: HandlebarType) => {
+  const handleCursorDown = (e: CursorEvent, type: HandlebarType) => {
     setCursorDown(true);
     setInitialCursorPosition({
       x: getCursorPosition('x', e),
@@ -156,20 +143,21 @@ export function Resizer({
     setHandlebarType(type);
   };
 
+  useWindowListeners({
+    isListen: isCursorDown,
+    onCursorMove: handleCursorMove,
+  });
+
   React.useEffect(() => {
-    if (isCursorDown) {
-      // listen for move
-      window.addEventListener(EVENTS.MOUSE_MOVE, handleCursorMove);
-      window.addEventListener(EVENTS.TOUCH_MOVE, handleCursorMove);
-    }
+    /*
+     * FLow does not yet support method or property calls in optional chains.
+     * $FlowIssue: https://github.com/facebook/flow/issues/4303
+     */
+    const { width, height } = containerRef.current?.getBoundingClientRect();
 
-    return () => {
-      window.removeEventListener(EVENTS.MOUSE_MOVE, handleCursorMove);
-      window.removeEventListener(EVENTS.TOUCH_MOVE, handleCursorMove);
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCursorDown]);
+    setContainerWidth(width);
+    setContainerHeight(height);
+  }, [containerRef]);
 
   const styles = {
     container: {

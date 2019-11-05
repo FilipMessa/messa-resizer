@@ -31,3 +31,7 @@ export type Style = {
   +[key: string]: string | number,
   ...,
 };
+
+export type CursorEvent =
+  | SyntheticTouchEvent<HTMLDivElement>
+  | SyntheticMouseEvent<HTMLDivElement>;
