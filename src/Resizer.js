@@ -83,11 +83,11 @@ export function Resizer({
   ] = React.useState<Position>(DEFAULT_POSITION);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const handleCursorMove = e => {
+  const handleCursorMove = position => {
     const getCursorCoordinates = axis => ({
       [axis]: {
         initial: initialCursorPosition[axis],
-        current: getCursorPosition(axis, e),
+        current: position[axis],
       },
     });
 
