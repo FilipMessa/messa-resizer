@@ -17,7 +17,8 @@ export type HandlebarType = $Values<typeof HADLEBARS_TYPES>;
 type Props = {|
   +className?: string,
   +extendStyle?: Style,
-  +onMove: (e: HandlebarEvent, type: HandlebarType) => void,
+  +onPressDown: (e: HandlebarEvent, type: HandlebarType) => void,
+  +onPressUp: () => void,
   +type?: HandlebarType,
 |};
 
@@ -61,13 +62,14 @@ export function Handlebar({
   type = HADLEBARS_TYPES.RIGHT,
   extendStyle,
   className,
-  onMove,
+  onPressDown,
+  onPressUp,
 }: Props) {
-  const handleMove = React.useCallback(
+  const handlePressDown = React.useCallback(
     e => {
-      onMove(e, type);
+      onPressDown(e, type);
     },
-    [onMove, type]
+    [onPressDown, type]
   );
 
   return (
@@ -79,8 +81,10 @@ export function Handlebar({
         ...extendStyle,
       }}
       className={className}
-      onTouchStart={handleMove}
-      onMouseDown={handleMove}
+      onTouchStart={handlePressDown}
+      onMouseDown={handlePressDown}
+      onMouseUp={onPressUp}
+      onTouchEnd={onPressUp}
     ></div>
   );
 }

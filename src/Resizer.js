@@ -161,17 +161,11 @@ export function Resizer({
       // listen for move
       window.addEventListener(EVENTS.MOUSE_MOVE, handleCursorMove);
       window.addEventListener(EVENTS.TOUCH_MOVE, handleCursorMove);
-
-      // listen for cursor up
-      window.addEventListener(EVENTS.MOUSE_UP, handleCursorUp);
-      window.addEventListener(EVENTS.TOUCH_END, handleCursorUp);
     }
 
     return () => {
       window.removeEventListener(EVENTS.MOUSE_MOVE, handleCursorMove);
       window.removeEventListener(EVENTS.TOUCH_MOVE, handleCursorMove);
-      window.removeEventListener(EVENTS.MOUSE_UP, handleCursorUp);
-      window.removeEventListener(EVENTS.TOUCH_END, handleCursorUp);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -205,7 +199,8 @@ export function Resizer({
         <Handlebar
           key={type}
           type={type}
-          onMove={handleCursorDown}
+          onPressDown={handleCursorDown}
+          onPressUp={handleCursorUp}
           className={handlersClassNames && handlersClassNames[type]}
           extendStyle={handlersStyles && handlersStyles[type]}
         />
